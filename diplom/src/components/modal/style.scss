@@ -1,0 +1,41 @@
+
+
+.watermellon__modal {
+    &__desrc {
+        background-color: #232322;
+        & .ant-descriptions-item-content {
+            text-align: justify;
+
+        }
+
+    }
+}
+
+.watermellon__modal {
+
+    .ant-modal-header {
+        padding: 5px 10px !important;
+    }
+    
+    .ant-modal-close-x {
+        width: 35px;
+        height: 35px;
+        line-height: 35px;
+    }
+
+    .ant-modal-body {
+        padding: 5px 10px;
+    }
+      
+
+        tr>td:first-child {
+            padding-bottom: 1em;
+            padding-right: 1em;
+        }
+
+        tr > td {
+            vertical-align: baseline;
+        }
+
+
+}

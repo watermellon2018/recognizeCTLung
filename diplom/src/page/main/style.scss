@@ -1,0 +1,30 @@
+.watermellon__main__wrap{
+    background-color: #cf3636;
+    border: 1px dashed white;
+    width: 80vw;
+    height: 80vh;
+
+    &__menu {
+        background-color:  #3394a5;
+        height: 100%;
+        width: 20%;
+        padding: 0 5px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items: center;
+    }
+
+}
+
+.watermellon__main {
+    background-image: url('background.jpg');
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+}
