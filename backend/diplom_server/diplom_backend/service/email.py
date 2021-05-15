@@ -12,6 +12,11 @@ from diplom_backend.service.report import make_report
 
 def make_and_send_report(ct, mask, email):
     print('email is = ', email)
+    print('type = ', type(ct), type(mask))
+    # mask = mask.numpy()
+    print('shape = ', ct.shape, mask.shape)
+    mask = mask.numpy()
+    ct = ct.numpy()
     doc_gen = make_report(ct, mask)
     print('generated report')
     send_email(email, doc_gen)

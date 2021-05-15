@@ -1,4 +1,5 @@
 ''' Формирование отчета в pdf и отправка его на email'''
+import torch
 from PIL import Image
 import io
 import cv2
@@ -13,8 +14,11 @@ def make_report(ct, mask):
     if ct.dtype == np.uint8:
         ct = ct.astype(np.int16)
 
-    ct_norm = cv2.normalize(ct, None, 0, 255, norm_type=cv2.NORM_MINMAX)
-    ct_with_segmentation = apply_mask(ct_norm, mask)
+    ct = np.squeeze(ct)
+    print(ct.max())
+
+    # ct_norm = cv2.normalize(ct, None, 0, 255, norm_type=cv2.NORM_MINMAX)
+    ct_with_segmentation = apply_mask(ct, mask)
     doc_gen = record_img(ct_with_segmentation)
 
     return doc_gen
@@ -27,10 +31,7 @@ def image_to_stream(image):
   return img_byte_arr.getvalue()
 
 def apply_mask(img, m):
-  for ind, x in enumerate(img):
-    tmp = (m[ind] - 1) * (-1)
-    img[ind] *= tmp
-  return img
+    return img * ((m - 1) * (-1))
 
 
 def convert_to_rgb(img):

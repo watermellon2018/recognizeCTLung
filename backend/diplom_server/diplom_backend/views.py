@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from diplom_backend.service.email import make_and_send_report
 from diplom_backend.service.recognize import run_model
 import SimpleITK as sitk
+from diplom_backend.service.preprocess import preprocess
 
 # TODO:: перенести в другой файл
 def load_image(filename):
@@ -27,11 +28,13 @@ def recognize(request):
     email = 'stepanovaks99@mail.ru'
 
     ct = load_image('/home/ytka/workspace/diplom/dataset/study_0302.nii.gz')
+    ct_preprocess = preprocess(ct)
+    # ct_preprocess = ct
     # mask = load_image('/home/ytka/workspace/diplom/dataset/study_0302_mask.nii.gz')
 
-    mask = run_model(ct) # TODO:: передать кт
+    mask = run_model(ct_preprocess) # TODO:: передать кт
     print('got mask from model')
-    make_and_send_report(ct, mask, email)
+    make_and_send_report(ct_preprocess, mask, email)
     return Response('recognized')
 
 @api_view(['GET', 'POST'])

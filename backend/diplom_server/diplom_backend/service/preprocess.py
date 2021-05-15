@@ -7,9 +7,9 @@ def preprocess(ct):
     X = [preprocess_slice(x) for x in ct]
     X = torch.tensor(X)
     X = torch.unsqueeze(X, 1)
-    device = Device().get_device()
-    print('device = ', device)
-    X = X.to(device)
+    # device = Device().get_device()
+    # X = X.to(device)
+
     return X
 
 
