@@ -1,3 +1,5 @@
+import threading
+
 from django.shortcuts import render
 
 # Create your views here.
@@ -7,15 +9,10 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from diplom_backend.service.email import make_and_send_report
 from diplom_backend.service.recognize import run_model
-import SimpleITK as sitk
 from diplom_backend.service.preprocess import preprocess
+from diplom_backend.service.load import do_work_user_ct, load_image
 
-# TODO:: перенести в другой файл
-def load_image(filename):
-    image = sitk.ReadImage(filename)
-    ct_scan = sitk.GetArrayFromImage(image)
 
-    return ct_scan
 # TODO:: передать КТ
 @api_view(['POST'])
 def report(request):
@@ -23,25 +20,46 @@ def report(request):
     make_and_send_report(email)
     return Response('email true')
 
-@api_view(['GET'])
-def recognize(request):
+# @api_view(['GET'])
+# def recognize(request):
+#     email = 'stepanovaks99@mail.ru'
+#
+#     ct = load_image('/home/ytka/workspace/diplom/dataset/study_0302.nii.gz')
+#     ct_preprocess = preprocess(ct)
+#     # ct_preprocess = ct
+#     # mask = load_image('/home/ytka/workspace/diplom/dataset/study_0302_mask.nii.gz')
+#
+#     mask = run_model(ct_preprocess) # TODO:: передать кт
+#     print('got mask from model')
+#     make_and_send_report(ct_preprocess, mask, email)
+#     return Response('recognized')
+
+import json
+
+# socket.send(data.encode())
+
+
+
+@api_view(['POST'])
+def loading(request):
+    f = request.FILES['file']
+
+    path = do_work_user_ct(f)
+
     email = 'stepanovaks99@mail.ru'
-
-    ct = load_image('/home/ytka/workspace/diplom/dataset/study_0302.nii.gz')
+    ct = load_image(path)
     ct_preprocess = preprocess(ct)
-    # ct_preprocess = ct
-    # mask = load_image('/home/ytka/workspace/diplom/dataset/study_0302_mask.nii.gz')
+    mask = run_model(ct_preprocess)
+    # print('ct = ', ct)
+    # data = json.dumps(ct.tolist())
+    # print(data)
 
-    mask = run_model(ct_preprocess) # TODO:: передать кт
-    print('got mask from model')
+    # ct_str = "".join(str(e) for e in ct.tolist())
+    # print(ct_str)
+
     make_and_send_report(ct_preprocess, mask, email)
-    return Response('recognized')
-
-@api_view(['GET', 'POST'])
-def hello(request):
-    print('heeee')
-    if request.method == 'GET':
-        return Response('hello')
+    # return Response('{\"ct\": ' + ct_str)
+    return Response('hell')
 
 @api_view(['GET', 'POST'])
 def test(request):

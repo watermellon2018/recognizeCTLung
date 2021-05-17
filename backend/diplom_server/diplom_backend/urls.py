@@ -10,9 +10,10 @@ urlpatterns = [
     # url(r'^$', views.index, name='index'),
     # url(r'^home$', views.hello),
     # url('', views.hello),
-    url('hello/', views.hello),
+    # url('hello/', views.hello),
     url('report/', views.report),
-    url('recognize/', views.recognize),
+    # url('recognize/', views.recognize),
+    url('loading/', views.loading),
 
     #url('test/', views.test)
 ]

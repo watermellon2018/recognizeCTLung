@@ -10,6 +10,7 @@ import API from "../../utils/API";
 import Info from '../../components/layouts/info';
 import ModalW from '../../components/modal';
 import Email from '../../components/layouts/email';
+// import { Uploader } from 'rsuite';
 
 
 interface AnalisCTI {
@@ -41,22 +42,20 @@ const AnalisCT: FC<AnalisCTI> = () => {
         setIsShowInfo(false);
     }
 
-    const testRecognize = () => {
-        console.log('test recognizing');
+    /*const testRecognize = () => {
         API.get('recognize/').then(res => {
             console.log(res);
         })
-    }
+    }*/
 
     return (
         <div className="watermellon__main">
             <div className="watermellon__main__wrap">
                 <div className="watermellon__main__wrap__menu">
+                    
                     <Upload
                      listType='picture'
-                     //action=''//jsonplaceholder.typicode.com/posts/'
-                     //action='http://localhost:8000/test' 
-                     //onChange={loadImage}
+                     action="http://localhost:8002/loading/"
                      onChange={handleUpload}
                      multiple={false}
                      showUploadList={false}
@@ -71,7 +70,7 @@ const AnalisCT: FC<AnalisCTI> = () => {
                     </Upload>
 
                     <WButton 
-                        onClick={testRecognize}
+                        // onClick={testRecognize}
                         size='large'
                         shape="circle"
                         isHint={true}
