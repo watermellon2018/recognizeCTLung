@@ -1,10 +1,10 @@
 ''' Формирование отчета в pdf и отправка его на email'''
-import torch
 from PIL import Image
 import io
 import cv2
-import fitz
 import numpy as np
+import fitz
+import datetime
 
 ''' В функцию передается КТ снимок и его маска'''
 def make_report(ct_preprocessed, mask):
@@ -15,10 +15,14 @@ def make_report(ct_preprocessed, mask):
         ct_preprocessed = ct_preprocessed.astype(np.int16)
 
     ct_preprocessed = np.squeeze(ct_preprocessed)
-    print(ct_preprocessed.shape)
     ct_with_contours = apply_contours(ct_preprocessed, mask, True)
-    print(ct_with_contours.shape)
-    doc_gen = record_img(ct_with_contours)
+
+    # TODO:: добавить нормальный текст
+    text_for_ct = "Дата: " + datetime.datetime.now().strftime(
+        '%H:%M %d.%m.%Y') + "\nПациент: Арбуз Абрикосович Вишневский\n" + \
+                  "Дата рождения: 26.12.1999\nВозраст: 905 лет\nНаличие патологий: Да\nПроцент поржаения: 5%"
+
+    doc_gen = record_img(ct_with_contours, text_for_ct)
 
     return doc_gen
 
@@ -71,39 +75,114 @@ def convert_to_rgb(img):
   return rgb_im
 
 
-def record_img(imgs):
+
+
+fontsize = 14
+padding_left_report = 40
+
+
+def make_title_report(report_page):
+    report_text = fitz.TextWriter(report_page.rect, color='black')
+    report_text.append(pos=fitz.Point(40, 30), text="Анализ КТ снимка грудной клетки", language='ru', fontsize=16)
+    return report_text
+
+
+def write_analys_text(report_text, text):
+    last_pos = 70
+
+    for line in text.split("\n"):
+        report_text.append(pos=fitz.Point(padding_left_report, last_pos), text=line, language='ru', fontsize=fontsize)
+        last_pos = last_pos + 15
+
+    return report_text, last_pos
+
+
+def record_img(imgs, text=None):
     doc = fitz.open()
     doc.insertPage(pno=0)
     report_page = doc[-1]
 
-    padding_left, padding_top = 20, 20
+    report_text = make_title_report(report_page)
+    report_page.drawLine(fitz.Point(padding_left_report, 40), fitz.Point(550, 40))
+
+    report_text, last_pos = write_analys_text(report_text, text)
+    report_page.writeText(writers=report_text)
+    report_page.drawLine(fitz.Point(padding_left_report, last_pos + 10), fitz.Point(550, last_pos + 10))
+
+    number_page = 1
+    doc.insertPage(pno=number_page)
+    report_page = doc[number_page]
+
+    cur_writer = fitz.TextWriter(report_page.rect, color='black')
+
+    padding_left, padding_top = padding_left_report, 30  # 20, 20
     x, y = padding_left, padding_top
 
-    margin_right, margin_bottom = 10, 10
+    margin_right, margin_bottom = 10, 20
     box = report_page.rect
     SIZE = int(box[2] / 5 + margin_right * 5)
-    number_page = 0
 
-    for tmp in imgs:
-        if len(tmp.shape) < 3 or tmp.shape[2] != 3:
-            tmp = convert_to_rgb(tmp)
+    for number_slice, tmp in enumerate(imgs):
+        # tmp = convert_to_rgb(tmp)
         tmp = image_to_stream(tmp)
 
         x2 = x + SIZE
         y2 = y + SIZE
 
         report_page.insertImage(rect=fitz.Rect(x, y, x2, y2), stream=tmp)
+        cur_writer.append(pos=fitz.Point(x, y - 6), text="Срез №" + str(number_slice + 1), language='ru', fontsize=12)
+
         x += SIZE + margin_right
         if x + SIZE > box[2]:
 
             if y + 2 * SIZE + margin_bottom > box[3]:
+                report_page.writeText(writers=cur_writer)
                 number_page += 1
                 doc.insertPage(pno=number_page)
                 report_page = doc[number_page]
                 x = padding_left
                 y = padding_top
+                cur_writer = fitz.TextWriter(report_page.rect, color='black')
             else:
                 x = padding_left
                 y += SIZE + margin_bottom
+
+    report_page.writeText(writers=cur_writer)
     return doc
 
+# def record_img(imgs):
+#     doc = fitz.open()
+#     doc.insertPage(pno=0)
+#     report_page = doc[-1]
+#
+#     padding_left, padding_top = 20, 20
+#     x, y = padding_left, padding_top
+#
+#     margin_right, margin_bottom = 10, 10
+#     box = report_page.rect
+#     SIZE = int(box[2] / 5 + margin_right * 5)
+#     number_page = 0
+#
+#     for tmp in imgs:
+#         if len(tmp.shape) < 3 or tmp.shape[2] != 3:
+#             tmp = convert_to_rgb(tmp)
+#         tmp = image_to_stream(tmp)
+#
+#         x2 = x + SIZE
+#         y2 = y + SIZE
+#
+#         report_page.insertImage(rect=fitz.Rect(x, y, x2, y2), stream=tmp)
+#         x += SIZE + margin_right
+#         if x + SIZE > box[2]:
+#
+#             if y + 2 * SIZE + margin_bottom > box[3]:
+#                 number_page += 1
+#                 doc.insertPage(pno=number_page)
+#                 report_page = doc[number_page]
+#                 x = padding_left
+#                 y = padding_top
+#             else:
+#                 x = padding_left
+#                 y += SIZE + margin_bottom
+#     return doc
+#
