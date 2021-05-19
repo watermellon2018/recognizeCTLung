@@ -1,8 +1,25 @@
 .watermellon__main__wrap{
-    background-color: #cf3636;
+    background-color: whitesmoke;
+    //background-color: #cf3636;
     border: 1px dashed white;
     width: 80vw;
     height: 80vh;
+    display: flex;
+    flex-direction: column;
+    padding: 0 8px;
+    align-items: center;
+
+    div:not(:last-child) {
+        margin-bottom: 10px;
+    }
+
+    .ant-form-item-control-input {
+        text-align: left;
+    }
+
+    .ant-form-item-explain-error {
+        text-align: start;
+    }
 
     &__menu {
         background-color:  #3394a5;
@@ -13,6 +30,32 @@
         flex-direction: column;
         justify-content: space-evenly;
         align-items: center;
+    }
+
+    &__personal{
+        display: flex;
+        //flex-wrap: wrap;
+        justify-content: flex-end;
+
+        /*div:not(:last-child){
+            margin-right: 10px;
+        }*/
+
+        &.ant-form-item{
+           width: 100px;
+
+        }
+    }
+
+   
+
+    &__uploader{
+        width: 70%;
+    }
+
+    &__info {
+        width: 100%;
+        text-align: end;
     }
 
 }

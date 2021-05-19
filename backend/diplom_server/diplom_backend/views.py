@@ -11,6 +11,7 @@ from diplom_backend.service.email import make_and_send_report
 from diplom_backend.service.recognize import run_model
 from diplom_backend.service.preprocess import preprocess
 from diplom_backend.service.load import do_work_user_ct, load_image
+from diplom_backend.service.segment_lung import get_volume_lesion, segmentation_lung
 
 
 # TODO:: передать КТ
@@ -47,18 +48,20 @@ def loading(request):
     path = do_work_user_ct(f)
 
     email = 'stepanovaks99@mail.ru'
-    ct = load_image(path)
-    ct_preprocess = preprocess(ct)
-    mask = run_model(ct_preprocess)
-    # print('ct = ', ct)
-    # data = json.dumps(ct.tolist())
-    # print(data)
+    # email = 'gfrv.rafael@gmail.com'
+    ct, ct_matrix = load_image(path)
 
-    # ct_str = "".join(str(e) for e in ct.tolist())
-    # print(ct_str)
+    mask_lung = segmentation_lung(ct)
 
-    make_and_send_report(ct_preprocess, mask, email)
-    # return Response('{\"ct\": ' + ct_str)
+
+    ct_preprocess = preprocess(ct_matrix)
+    mask_lesion = run_model(ct_preprocess)
+
+    volume_lesion = get_volume_lesion(mask_lung, mask_lesion)
+    print(volume_lesion)
+
+
+    make_and_send_report(ct_preprocess, mask_lesion, email)
     return Response('hell')
 
 @api_view(['GET', 'POST'])

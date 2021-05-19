@@ -1,6 +1,6 @@
 
 import React, {FC, useEffect, useState} from 'react';
-import { Button, message, Upload, Tooltip } from 'antd';
+import { Button, Divider, Input, DatePicker, Radio, Form, message, Upload, Tooltip } from 'antd';
 import { InfoCircleOutlined, HeatMapOutlined,
      CloudDownloadOutlined, QuestionOutlined, SlackOutlined, SendOutlined } from '@ant-design/icons';
 import './style.scss';
@@ -11,6 +11,11 @@ import Info from '../../components/layouts/info';
 import ModalW from '../../components/modal';
 import Email from '../../components/layouts/email';
 // import { Uploader } from 'rsuite';
+import { InboxOutlined } from '@ant-design/icons';
+import FormSetting from '../../components/layouts/formSetting';
+
+const { Dragger } = Upload;
+
 
 
 interface AnalisCTI {
@@ -42,76 +47,47 @@ const AnalisCT: FC<AnalisCTI> = () => {
         setIsShowInfo(false);
     }
 
-    /*const testRecognize = () => {
-        API.get('recognize/').then(res => {
-            console.log(res);
-        })
-    }*/
-
+    const onFinish = (values: any) => {
+        console.log(values);
+      };
+      
+    
     return (
         <div className="watermellon__main">
             <div className="watermellon__main__wrap">
-                <div className="watermellon__main__wrap__menu">
-                    
-                    <Upload
-                     listType='picture'
-                     action="http://localhost:8002/loading/"
-                     onChange={handleUpload}
-                     multiple={false}
-                     showUploadList={false}
-                     >
-                    <WButton
-                        size='large'
-                        shape="circle"
-                        isHint={true} 
-                        icon={<CloudDownloadOutlined />}
-                        tooltip="Загрузка"
-                    />
-                    </Upload>
-
-                    <WButton 
-                        // onClick={testRecognize}
-                        size='large'
-                        shape="circle"
-                        isHint={true}
-                        tooltip="Оригинальный КТ"
-                        icon={<SlackOutlined />}
-                    />
-
-                    <WButton
-                        size='large'
-                        shape="circle"
-                        isHint={true}
-                        tooltip="Сегментация"
-                        icon={<HeatMapOutlined />}
-                    />
-
-                    <WButton 
-                        onClick={showEmailModal}
-                        size='large'
-                        shape='circle'
-                        isHint={true}
-                        tooltip="Отправить отчет на email"
-                        icon={<SendOutlined />}
-                    />
-
+                    <div className="watermellon__main__wrap__info">
                     <WButton
                         onClick={showInformation}
                         size='large'
                         shape="circle"
                         isHint={true}
                         tooltip="Информация"
-                        icon={<QuestionOutlined />
-                    }
+                        icon={<QuestionOutlined />}
                     />
+                    </div>
+
+                    <div className="watermellon__main__wrap__uploader" style={{marginBottom: '30px'}}>
+                        <Dragger 
+                            action="http://localhost:8000/loading/"
+                            onChange={handleUpload}
+                            multiple={false}
+                            showUploadList={false}
+                        >
+                            <p className="ant-upload-drag-icon">
+                                <InboxOutlined />
+                            </p>
+                            <p className="ant-upload-text">Нажмите или перетащите файл для загрузки</p>
+                        </Dragger>
+                    </div>
+          
+
+                    
+                    <div style={{width: "70%"}}>
+                        <FormSetting onFinish={onFinish} />
+                    </div>
+
+                   
                 
-                </div>
-
-                <div className="watermellon__main__ct">
-
-
-                </div>
-
                 <ModalW 
                     isShow={isShowInfo}
                     onCancel={closeInfo}

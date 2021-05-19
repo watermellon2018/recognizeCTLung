@@ -36,4 +36,4 @@ def load_image(filename):
     image = sitk.ReadImage(filename)
     ct_scan = sitk.GetArrayFromImage(image)
 
-    return ct_scan
+    return image, ct_scan
