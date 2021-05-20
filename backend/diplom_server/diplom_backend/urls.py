@@ -11,9 +11,9 @@ urlpatterns = [
     # url(r'^home$', views.hello),
     # url('', views.hello),
     # url('hello/', views.hello),
-    url('report/', views.report),
+    # url('report/', views.report),
     # url('recognize/', views.recognize),
-    url('loading/', views.loading),
+    url('recognize/', views.recognize),
 
     #url('test/', views.test)
 ]

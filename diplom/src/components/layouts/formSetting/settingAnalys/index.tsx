@@ -28,10 +28,10 @@ const SettingAnalys: FC = ({}) => {
                 required={true} 
                 rules={[{ type: 'email' }]}
             >
-                <Input maxLength={255} allowClear style={{width: "50%"}} />
+                <Input minLength={5} maxLength={255} allowClear style={{width: "50%"}} />
             </Form.Item>
 
-            <Form.Item name="radio-group" label="Режим">
+            <Form.Item name="mode" label="Режим">
                 <Radio.Group>
                     <Radio value="segmentation">Сегментация</Radio>
                     <Radio value="detection">Детекция</Radio>

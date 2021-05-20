@@ -28,14 +28,14 @@ const PersonalSettingForm: FC = ({}) => {
                         name={['name']}
                         label="Имя"
                     >
-                        <Input style={{maxWidth: "150px"}} />
+                        <Input allowClear style={{maxWidth: "150px"}} />
                     </Form.Item>
 
                     <Form.Item 
                         name={['father_name']}
                         label="Отчество"
                     >
-                        <Input style={{maxWidth: "150px"}} />
+                        <Input allowClear style={{maxWidth: "150px"}} />
                     </Form.Item>
     
             </div>
@@ -45,7 +45,7 @@ const PersonalSettingForm: FC = ({}) => {
                     name={['last_name']}
                     label="Фамилия"
                 >
-                    <Input style={{maxWidth: "150px"}} />
+                    <Input allowClear style={{maxWidth: "150px"}} />
                 </Form.Item>
     
 

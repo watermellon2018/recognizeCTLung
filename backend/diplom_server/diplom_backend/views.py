@@ -42,12 +42,16 @@ import json
 
 
 @api_view(['POST'])
-def loading(request):
-    f = request.FILES['file']
+def recognize(request):
+    print(request.data)
+    #f = request.FILES['files']
+    print(request.data['ct'])
+    f = request.FILES['ct']
+    print(f)
 
     path = do_work_user_ct(f)
 
-    email = 'stepanovaks99@mail.ru'
+    email = request.data['email']
     # email = 'gfrv.rafael@gmail.com'
     ct, ct_matrix = load_image(path)
 

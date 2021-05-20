@@ -1,7 +1,10 @@
 import numpy as  np
 from lungmask import mask as segmentator
+import cv2
 
 def get_volume_lesion(mask_lung, mask_lesion):
+    print(mask_lung.shape)
+    mask_lung = cv2.resize(mask_lung, (160, 160))
     unique_value_lung = np.unique(mask_lung, return_counts=True)[1]
     count_pixel_lung = unique_value_lung[1] + unique_value_lung[2]
 

@@ -26,13 +26,15 @@ const FormSetting: FC<FormSettingI> = ({onFinish = () => {}}) => {
         },
       };
 
-
-    return (
-        <Form
+      /*
+      <Form
             {...layout}
             name="setting"
             onFinish={onFinish}
-        >
+        > */
+
+    return (
+        <>
             <SettingAnalys />
             <PersonalSettingForm />
             
@@ -43,8 +45,7 @@ const FormSetting: FC<FormSettingI> = ({onFinish = () => {}}) => {
                     Отправить
                 </Button>
             </Form.Item>
-        </Form>
-
+</>
     )
 }
 
