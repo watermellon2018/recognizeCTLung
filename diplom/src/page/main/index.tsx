@@ -29,6 +29,8 @@ interface PersonalSetting {
     ct: any;
 };
 
+type type_notification = 'success' | 'error' | 'info' | 'warning' | 'warn';
+
 const AnalisCT: FC<AnalisCTI> = () => {
 
     const [isSelectFile, setIsSelectFile] = useState(false);
@@ -36,8 +38,8 @@ const AnalisCT: FC<AnalisCTI> = () => {
     const [form] = useForm()
 
 
-    const openNotification = (mes: string, description: string) => {
-        notification['error']({
+    const openNotification = (mes: string, description: string, type: type_notification = 'error') => {
+        notification[type]({
           message: mes,
           description,
           placement: 'bottomLeft', 
@@ -104,7 +106,7 @@ const AnalisCT: FC<AnalisCTI> = () => {
               if(response.statusText === 'OK')
                 setIsSelectFile(false);
                 setIsProcess(false);
-                openNotification( 'Обработка завершена', 'КТ снимок обработан. Результаты отправлены на почту');
+                openNotification( 'Обработка завершена', 'КТ снимок обработан. Результаты отправлены на почту', 'success');
             })
             .catch(function (response) {
               //handle error
