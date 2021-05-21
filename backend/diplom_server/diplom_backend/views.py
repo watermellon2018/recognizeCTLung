@@ -77,7 +77,7 @@ def recognize(request):
 
 
     make_and_send_report(ct_preprocess, mask_lesion, data_for_report)
-    return Response('hell')
+    return Response('OK')
 
 @api_view(['GET', 'POST'])
 def test(request):

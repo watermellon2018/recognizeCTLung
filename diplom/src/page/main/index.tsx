@@ -1,7 +1,7 @@
 
 import React, {FC, useEffect, useState} from 'react';
 import { Result, notification,  Divider, Input, DatePicker, Radio, Form, message, Upload, Tooltip } from 'antd';
-import { QuestionOutlined} from '@ant-design/icons';
+import { QuestionOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import './style.scss';
 import WButton from '../../components/button';
 import axios from 'axios';
@@ -31,35 +31,38 @@ interface PersonalSetting {
 
 const AnalisCT: FC<AnalisCTI> = () => {
 
-    const openNotification = (mes: string) => {
+    const [ isSelectFile, setIsSelectFile ] = useState(false);
+    const [form] = useForm()
+
+
+    const openNotification = (mes: string, description: string) => {
         notification['error']({
-          message: 'Заполните форму',
-          description: mes,
-          placement: 'bottomLeft'
+          message: mes,
+          description,
+          placement: 'bottomLeft', 
         });
       };
 
-    const [form] = useForm()
 
     const onFinish = (values:any) => {
       ;
         if(values['ct_load'] === undefined){
-            openNotification('Вы забыли загрузить КТ снимок')
+            openNotification( 'Заполните форму', 'Вы забыли загрузить КТ снимок')
             return;
         }
 
         if(values['email'] === undefined){
-            openNotification('Вы забыли указать email');
+            openNotification( 'Заполните форму', 'Вы забыли указать email');
             return;
         }
         
         const mode = (values['mode'] === undefined) ? 'segmentation' : values['mode'];
-        const name = (values['name'] === undefined || values['name'].length === 0) ? '-' : values['name'];
+        const name = (values['name'] === undefined || values['name'].length === 0) ? '---' : values['name'];
         const last_name = (values['last_name'] === undefined || values['last_name'].length === 0) 
-                            ? '-' : values['last_name'];
+                            ? '---' : values['last_name'];
         const father_name = (values['father_name'] === undefined || values['father_name'].length === 0)
-                            ? '-' : values['father_name'];
-        const birthday = (values['birthday'] === undefined) ? '-' : values['birthday'];
+                            ? '---' : values['father_name'];
+        const birthday = (values['birthday'] === undefined) ? '---' : values['birthday'];
         console.log('values = ', values)
 
       
@@ -77,10 +80,10 @@ const AnalisCT: FC<AnalisCTI> = () => {
         const bodyFormData = new FormData();
         bodyFormData.append('email', values.email);
         bodyFormData.append('mode', mode);
-        bodyFormData.append('name', values.name);
-        bodyFormData.append('last_name', values.last_name);
-        bodyFormData.append('father_name', values.father_name);
-        bodyFormData.append('birthday', values.birthday);
+        bodyFormData.append('name', name);
+        bodyFormData.append('last_name', last_name);
+        bodyFormData.append('father_name', father_name);
+        bodyFormData.append('birthday', birthday);
         bodyFormData.append('ct', values['ct_load']['file']['originFileObj']);
 
 
@@ -93,10 +96,14 @@ const AnalisCT: FC<AnalisCTI> = () => {
             .then(function (response) {
               //handle success
               console.log(response);
+              if(response.statusText === 'OK')
+                setIsSelectFile(false);
+                openNotification( 'Обработка завершена', 'КТ снимок обработан. Результаты отправлены на почту');
             })
             .catch(function (response) {
               //handle error
               console.log(response);
+              openNotification( 'Ошибка', 'Что-то пошло не так');
             });
     }
 
@@ -117,7 +124,6 @@ const AnalisCT: FC<AnalisCTI> = () => {
         setIsShowInfo(false);
     }
 
-    const [ isSelectFile, setIsSelectFile ] = useState(false);
     const onChange = (file: any) => {
         console.log(file)
         console.log(file.fileList.length)

@@ -15,7 +15,11 @@ def make_report(ct_preprocessed, mask, data_for_report):
         ct_preprocessed = ct_preprocessed.astype(np.int16)
 
     ct_preprocessed = np.squeeze(ct_preprocessed)
-    ct_with_contours = apply_contours(ct_preprocessed, mask, True)
+
+    # if(data_for_report['mode'] == 'detect')
+    #     is_detection = True
+    is_detection = True if data_for_report['mode'] == 'detect' else False
+    ct_with_contours = apply_contours(ct_preprocessed, mask, is_detection)
 
     print('data_for_report = ', data_for_report)
     V = float(data_for_report['volume_lesion']) * 100
@@ -25,7 +29,7 @@ def make_report(ct_preprocessed, mask, data_for_report):
     text_for_ct = "Дата: " + datetime.datetime.now().strftime(
         '%H:%M %d.%m.%Y') + "\nПациент: " + data_for_report['name'] + " " + data_for_report['father_name'] + \
                   " " + data_for_report['last_name'] + "\n" + \
-                  "Дата рождения: " + data_for_report['birhday'] +"\n" + type_homogen + \
+                  "Дата рождения: " + data_for_report['birthday'] +"\n" + type_homogen + \
             "\nПроцент поражения: " + str(V) + "%"
 
     doc_gen = record_img(ct_with_contours, text_for_ct)
