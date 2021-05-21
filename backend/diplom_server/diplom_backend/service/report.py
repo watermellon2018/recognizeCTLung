@@ -22,7 +22,7 @@ def make_report(ct_preprocessed, mask, data_for_report):
     ct_with_contours = apply_contours(ct_preprocessed, mask, is_detection)
 
     print('data_for_report = ', data_for_report)
-    V = float(data_for_report['volume_lesion']) * 100
+    V = np.round(float(data_for_report['volume_lesion']) * 100, 3)
 
     type_homogen = get_type_homogen(V)
 

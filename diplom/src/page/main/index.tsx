@@ -1,7 +1,7 @@
 
 import React, {FC, useEffect, useState} from 'react';
-import { Result, notification,  Divider, Input, DatePicker, Radio, Form, message, Upload, Tooltip } from 'antd';
-import { QuestionOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { Result, notification, Spin, Input, Form, Upload } from 'antd';
+import { QuestionOutlined } from '@ant-design/icons';
 import './style.scss';
 import WButton from '../../components/button';
 import axios from 'axios';
@@ -9,11 +9,11 @@ import API from "../../utils/API";
 import Info from '../../components/layouts/info';
 import ModalW from '../../components/modal';
 import Email from '../../components/layouts/email';
-// import { Uploader } from 'rsuite';
 import { InboxOutlined } from '@ant-design/icons';
 import FormSetting from '../../components/layouts/formSetting';
 import '../../components/layouts/formSetting/style.scss';
 import { useForm } from 'antd/lib/form/Form';
+import SpinW from '../../components/spin';
 
 const { Dragger } = Upload;
 
@@ -31,7 +31,8 @@ interface PersonalSetting {
 
 const AnalisCT: FC<AnalisCTI> = () => {
 
-    const [ isSelectFile, setIsSelectFile ] = useState(false);
+    const [isSelectFile, setIsSelectFile] = useState(false);
+    const [isProcess, setIsProcess] = useState(false);
     const [form] = useForm()
 
 
@@ -57,14 +58,16 @@ const AnalisCT: FC<AnalisCTI> = () => {
         }
         
         const mode = (values['mode'] === undefined) ? 'segmentation' : values['mode'];
-        const name = (values['name'] === undefined || values['name'].length === 0) ? '---' : values['name'];
+        let name = (values['name'] === undefined || values['name'].length === 0) ? '' : values['name'];
         const last_name = (values['last_name'] === undefined || values['last_name'].length === 0) 
-                            ? '---' : values['last_name'];
+                            ? '' : values['last_name'];
         const father_name = (values['father_name'] === undefined || values['father_name'].length === 0)
-                            ? '---' : values['father_name'];
+                            ? '' : values['father_name'];
         const birthday = (values['birthday'] === undefined) ? '---' : values['birthday'];
         console.log('values = ', values)
 
+        if (name.length == 0 && last_name.length == 0 && father_name.length == 0)
+            name = '---'
       
 
         const param: PersonalSetting = {
@@ -86,6 +89,8 @@ const AnalisCT: FC<AnalisCTI> = () => {
         bodyFormData.append('birthday', birthday);
         bodyFormData.append('ct', values['ct_load']['file']['originFileObj']);
 
+        setIsProcess(true);
+
 
         axios({
             method: "post",
@@ -98,26 +103,22 @@ const AnalisCT: FC<AnalisCTI> = () => {
               console.log(response);
               if(response.statusText === 'OK')
                 setIsSelectFile(false);
+                setIsProcess(false);
                 openNotification( 'Обработка завершена', 'КТ снимок обработан. Результаты отправлены на почту');
             })
             .catch(function (response) {
               //handle error
               console.log(response);
+              setIsProcess(false);
               openNotification( 'Ошибка', 'Что-то пошло не так');
             });
     }
 
 
     const [isShowInfo, setIsShowInfo] = useState(false);
-    const [isShowEmailModal, setIsShowEmailModal] = useState(false);
 
     const showInformation = () => {
         setIsShowInfo(true);        
-    }
-
-
-    const closeEmailModal = () => {
-        setIsShowEmailModal(false);
     }
 
     const closeInfo = () => {
@@ -151,7 +152,10 @@ const AnalisCT: FC<AnalisCTI> = () => {
                         icon={<QuestionOutlined />}
                     />
                     </div>
+
+                    <SpinW visible={isProcess}>
                     
+
                     <Form
                         form={form}
                         {...layout}
@@ -191,6 +195,7 @@ const AnalisCT: FC<AnalisCTI> = () => {
                         <FormSetting />
                     </div>
                     </Form>
+                    </SpinW>
 
                    
                 
@@ -200,15 +205,6 @@ const AnalisCT: FC<AnalisCTI> = () => {
                     titleModal='Информация о программе'
                 >
                     <Info />  
-                </ModalW>
-
-                <ModalW 
-                    width={400}
-                    isShow={isShowEmailModal}
-                    onCancel={closeEmailModal}
-                    titleModal='Отправить отчет'
-                >
-                    <Email />
                 </ModalW>
 
             </div>        
