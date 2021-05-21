@@ -1,8 +1,7 @@
 
 import React, {FC, useEffect, useState} from 'react';
-import { Button,notification,  Divider, Input, DatePicker, Radio, Form, message, Upload, Tooltip } from 'antd';
-import { InfoCircleOutlined, HeatMapOutlined,
-     CloudDownloadOutlined, QuestionOutlined, SlackOutlined, SendOutlined } from '@ant-design/icons';
+import { Result, notification,  Divider, Input, DatePicker, Radio, Form, message, Upload, Tooltip } from 'antd';
+import { QuestionOutlined} from '@ant-design/icons';
 import './style.scss';
 import WButton from '../../components/button';
 import axios from 'axios';
@@ -48,28 +47,41 @@ const AnalisCT: FC<AnalisCTI> = () => {
             openNotification('Вы забыли загрузить КТ снимок')
             return;
         }
+
         if(values['email'] === undefined){
             openNotification('Вы забыли указать email');
             return;
         }
         
         const mode = (values['mode'] === undefined) ? 'segmentation' : values['mode'];
+        const name = (values['name'] === undefined || values['name'].length === 0) ? '-' : values['name'];
+        const last_name = (values['last_name'] === undefined || values['last_name'].length === 0) 
+                            ? '-' : values['last_name'];
+        const father_name = (values['father_name'] === undefined || values['father_name'].length === 0)
+                            ? '-' : values['father_name'];
+        const birthday = (values['birthday'] === undefined) ? '-' : values['birthday'];
+        console.log('values = ', values)
+
       
 
         const param: PersonalSetting = {
-            name: values['name'],
-            last_name: values['last_name'],
-            father_name: values['father_name'],
-            birthday: values['birthday'],
+            name,
+            last_name,
+            father_name,
+            birthday,
             email: values['email'],
             ct: values['ct_load']['file']['originFileObj']
         }
 
         console.log({...param});
         const bodyFormData = new FormData();
-        bodyFormData.append('email', param.email);
+        bodyFormData.append('email', values.email);
+        bodyFormData.append('mode', mode);
+        bodyFormData.append('name', values.name);
+        bodyFormData.append('last_name', values.last_name);
+        bodyFormData.append('father_name', values.father_name);
+        bodyFormData.append('birthday', values.birthday);
         bodyFormData.append('ct', values['ct_load']['file']['originFileObj']);
-        console.log(values['ct_load'])
 
 
         axios({
@@ -86,9 +98,6 @@ const AnalisCT: FC<AnalisCTI> = () => {
               //handle error
               console.log(response);
             });
-       /*API.post('recognize/', {...param}).then(res => {
-            console.log(res);
-        })*/
     }
 
 
@@ -108,9 +117,14 @@ const AnalisCT: FC<AnalisCTI> = () => {
         setIsShowInfo(false);
     }
 
-    /*const onFinish = (values: any) => {
-        console.log(values);
-    };*/
+    const [ isSelectFile, setIsSelectFile ] = useState(false);
+    const onChange = (file: any) => {
+        console.log(file)
+        console.log(file.fileList.length)
+        if(file.fileList.length > 0)
+            setIsSelectFile(true);
+    }
+
 
     const layout = {
         labelCol: { span: 0 },
@@ -142,16 +156,23 @@ const AnalisCT: FC<AnalisCTI> = () => {
                         
                             <Form.Item name='ct_load'>
                         <Dragger 
+                            onChange={onChange}
                             action='/loading/'
-                            //action="http://localhost:8000/loading/"
-                            //onChange={handleUpload}
                             multiple={false}
                             showUploadList={false}
                             maxCount={1}
                         >
-                            <p className="ant-upload-drag-icon">
-                                <InboxOutlined />
-                            </p>
+                            {isSelectFile ? 
+                                <Result
+                                    style={{padding: '0'}}
+                                    status="success"
+                                    title="Файл выбран"
+                                /> 
+                                :
+                                <p className="ant-upload-drag-icon">
+                                    <InboxOutlined />
+                                </p> 
+                            }
                             <p className="ant-upload-text">Нажмите или перетащите файл для загрузки</p>
                         </Dragger>
                         </Form.Item>
@@ -161,7 +182,7 @@ const AnalisCT: FC<AnalisCTI> = () => {
 
                     
                     <div>
-                        <FormSetting onFinish={onFinish} />
+                        <FormSetting />
                     </div>
                     </Form>
 

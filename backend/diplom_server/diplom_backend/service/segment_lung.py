@@ -1,4 +1,4 @@
-import numpy as  np
+import numpy as np
 from lungmask import mask as segmentator
 import cv2
 
@@ -12,7 +12,7 @@ def get_volume_lesion(mask_lung, mask_lesion):
     count_pixel_lesion = uniq_val_mask[1]
 
     volume = (count_pixel_lesion / count_pixel_lung) * 100
-    return volume
+    return np.round(volume, 5)
 
 def segmentation_lung(ct):
     segmentation = segmentator.apply(ct)

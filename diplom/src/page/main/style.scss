@@ -49,9 +49,37 @@
 
    
 
-    /*&__uploader{
-        width: 70%;
-    }*/
+    &__uploader{
+        height: 175px;
+
+        & .ant-form-item-control-input{
+            height: 100%;
+        }
+
+        & .ant-form-item-control-input-content{
+            height: 100%;
+        }
+
+        & .ant-row {
+            height: 100%;
+        }
+
+        & .ant-col{
+            height: 100%;
+        }
+
+        /*div {
+            height: 100%;
+        }*/
+
+        & .ant-result-title {
+            font-size: 18px;
+        }
+
+        & .ant-result-icon > .anticon{
+            font-size: 60px;
+        }
+    }
 
     &__info {
         width: 100%;

@@ -8,12 +8,7 @@ interface FormSettingI {
     onFinish?: (values: any) => void;
 }
 
-const FormSetting: FC<FormSettingI> = ({onFinish = () => {}}) => {
-
-    const layout = {
-        labelCol: { span: 0 },
-        wrapperCol: { span: 24 },
-    };
+const FormSetting: FC<FormSettingI> = () => {
 
     const tailLayout = {
        wrapperCol: { offset: 8, span: 16 },
@@ -25,13 +20,6 @@ const FormSetting: FC<FormSettingI> = ({onFinish = () => {}}) => {
           email: 'Не верный email',
         },
       };
-
-      /*
-      <Form
-            {...layout}
-            name="setting"
-            onFinish={onFinish}
-        > */
 
     return (
         <>

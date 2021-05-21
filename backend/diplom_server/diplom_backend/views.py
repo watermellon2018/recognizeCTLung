@@ -44,14 +44,13 @@ import json
 @api_view(['POST'])
 def recognize(request):
     print(request.data)
-    #f = request.FILES['files']
-    print(request.data['ct'])
+
+
     f = request.FILES['ct']
-    print(f)
+
 
     path = do_work_user_ct(f)
 
-    email = request.data['email']
     # email = 'gfrv.rafael@gmail.com'
     ct, ct_matrix = load_image(path)
 
@@ -64,8 +63,20 @@ def recognize(request):
     volume_lesion = get_volume_lesion(mask_lung, mask_lesion)
     print(volume_lesion)
 
+    data_for_report = {
+        'name': request.data['name'],
+        'last_name': request.data['last_name'],
+        'father_name': request.data['father_name'],
+        'birthday': request.data['birthday'],
+        'volume_lesion': str(volume_lesion),
+        'mode': request.data['mode'],
+        'email': request.data['email'],
+    }
 
-    make_and_send_report(ct_preprocess, mask_lesion, email)
+    print('data_for_report before report = ', data_for_report)
+
+
+    make_and_send_report(ct_preprocess, mask_lesion, data_for_report)
     return Response('hell')
 
 @api_view(['GET', 'POST'])

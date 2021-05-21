@@ -4,18 +4,8 @@ import { InfoCircleOutlined, HeatMapOutlined,
      CloudDownloadOutlined, QuestionOutlined, SlackOutlined, SendOutlined } from '@ant-design/icons';
 import '../style.scss';
 
-interface PersonalSettingFormI {
-}
-
 const PersonalSettingForm: FC = ({}) => {
 
-
-      const validateMessages = {
-        required: 'Укажите ${label}',
-        types: {
-          email: 'Не верный email',
-        },
-      };
 
 
     return (
@@ -27,15 +17,17 @@ const PersonalSettingForm: FC = ({}) => {
                     <Form.Item 
                         name={['name']}
                         label="Имя"
+                        rules={[{pattern: new RegExp(/^[a-zA-Zа-яА-я ]*$/), message: 'Введите имя'}]}
                     >
-                        <Input allowClear style={{maxWidth: "150px"}} />
+                        <Input allowClear maxLength={255} style={{maxWidth: "150px"}} />
                     </Form.Item>
 
                     <Form.Item 
                         name={['father_name']}
                         label="Отчество"
+                        rules={[{pattern: new RegExp(/^[a-zA-Zа-яА-я ]*$/), message: 'Введите фамилия'}]}
                     >
-                        <Input allowClear style={{maxWidth: "150px"}} />
+                        <Input allowClear maxLength={255} style={{maxWidth: "150px"}} />
                     </Form.Item>
     
             </div>
@@ -44,8 +36,9 @@ const PersonalSettingForm: FC = ({}) => {
                 <Form.Item 
                     name={['last_name']}
                     label="Фамилия"
+                    rules={[{pattern: new RegExp(/^[a-zA-Zа-яА-я ]*$/), message: 'Введите отчество'}]}
                 >
-                    <Input allowClear style={{maxWidth: "150px"}} />
+                    <Input allowClear maxLength={255} style={{maxWidth: "150px"}} />
                 </Form.Item>
     
 

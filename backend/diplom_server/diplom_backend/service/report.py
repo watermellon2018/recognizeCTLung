@@ -7,7 +7,7 @@ import fitz
 import datetime
 
 ''' В функцию передается КТ снимок и его маска'''
-def make_report(ct_preprocessed, mask):
+def make_report(ct_preprocessed, mask, data_for_report):
 
 
     # TODO:: разобраться с типами
@@ -17,14 +17,30 @@ def make_report(ct_preprocessed, mask):
     ct_preprocessed = np.squeeze(ct_preprocessed)
     ct_with_contours = apply_contours(ct_preprocessed, mask, True)
 
-    # TODO:: добавить нормальный текст
+    print('data_for_report = ', data_for_report)
+    V = float(data_for_report['volume_lesion']) * 100
+
+    type_homogen = get_type_homogen(V)
+
     text_for_ct = "Дата: " + datetime.datetime.now().strftime(
-        '%H:%M %d.%m.%Y') + "\nПациент: Арбуз Абрикосович Вишневский\n" + \
-                  "Дата рождения: 26.12.1999\nВозраст: 905 лет\nНаличие патологий: Да\nПроцент поржаения: 5%"
+        '%H:%M %d.%m.%Y') + "\nПациент: " + data_for_report['name'] + " " + data_for_report['father_name'] + \
+                  " " + data_for_report['last_name'] + "\n" + \
+                  "Дата рождения: " + data_for_report['birhday'] +"\n" + type_homogen + \
+            "\nПроцент поражения: " + str(V) + "%"
 
     doc_gen = record_img(ct_with_contours, text_for_ct)
 
     return doc_gen
+
+def get_type_homogen(V):
+    type_homogen = "Малая гомогенность"
+
+    if V > 30 and V < 60:
+        type_homogen = "Средняя гомогенность"
+    elif V >= 60:
+        type_homogen = "Высокая гомогенность"
+
+    return type_homogen
 
 def detection(contours, ct_rgb):
     for c in contours:

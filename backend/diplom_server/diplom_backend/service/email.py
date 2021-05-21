@@ -3,21 +3,17 @@ from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import formatdate
-import SimpleITK as sitk
 from diplom_backend.service.report import make_report
 
 '''
     Отправка сформированного отчета на email
 '''
 
-def make_and_send_report(ct, mask, email):
-    print('email is = ', email)
-    print('type = ', type(ct), type(mask))
-    # mask = mask.numpy()
-    print('shape = ', ct.shape, mask.shape)
+def make_and_send_report(ct, mask, data_for_report):
+    email = data_for_report['email']
     mask = mask.numpy()
     ct = ct.numpy()
-    doc_gen = make_report(ct, mask)
+    doc_gen = make_report(ct, mask, data_for_report)
     print('generated report')
     send_email(email, doc_gen)
     print('email sended')
