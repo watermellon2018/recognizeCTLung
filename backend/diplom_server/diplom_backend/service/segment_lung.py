@@ -3,16 +3,36 @@ from lungmask import mask as segmentator
 import cv2
 
 def get_volume_lesion(mask_lung, mask_lesion):
-    print(mask_lung.shape)
-    mask_lung = cv2.resize(mask_lung, (160, 160))
+
+    mask_lung = [cv2.resize(slice, (160, 160)) for slice in mask_lung]
+    mask_lung = np.array(mask_lung)
+
+    print(mask_lung.shape, mask_lesion.shape)
     unique_value_lung = np.unique(mask_lung, return_counts=True)[1]
     count_pixel_lung = unique_value_lung[1] + unique_value_lung[2]
+    print('count_pixel_lung = ', count_pixel_lung, 'unique_value_lung = ', unique_value_lung)
 
     uniq_val_mask = np.unique(mask_lesion, return_counts=True)[1]
     count_pixel_lesion = uniq_val_mask[1]
+    print('count_pixel_lesion = ', count_pixel_lesion, 'uniq_val_mask = ', uniq_val_mask)
+
+
+    cols_by_2 = int(mask_lesion.shape[2] / 2)
+    count_pixel_left_lesion = np.unique(mask_lesion[:, :, 0:cols_by_2], return_counts=True)[1][1]
+    count_pixel_right_lesion = np.unique(mask_lesion[:, :, cols_by_2:], return_counts=True)[1][1]
+    print('count_pixel_left_lesion =', count_pixel_left_lesion, 'count_pixel_right_lesion = ', count_pixel_right_lesion)
+
 
     volume = (count_pixel_lesion / count_pixel_lung) * 100
-    return np.round(volume, 5)
+
+    volume_left = (count_pixel_left_lesion / count_pixel_lung) * 100
+    volume_right = (count_pixel_right_lesion / count_pixel_lung) * 100
+
+    return {
+        'lung': np.round(volume, 5),
+        'left': np.round(volume_left, 5),
+        'right':  np.round(volume_right, 5)
+    }
 
 def segmentation_lung(ct):
     segmentation = segmentator.apply(ct)

@@ -1,16 +1,14 @@
+import os
 import threading
-
-from django.shortcuts import render
 
 # Create your views here.
 
-from django.http import HttpResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from diplom_backend.service.email import make_and_send_report
+from diplom_backend.service.email import make_and_send_report, send_question_to_email
 from diplom_backend.service.recognize import run_model
 from diplom_backend.service.preprocess import preprocess
-from diplom_backend.service.load import do_work_user_ct, load_image
+from diplom_backend.service.load import get_path_to_file, load_image
 from diplom_backend.service.segment_lung import get_volume_lesion, segmentation_lung
 
 
@@ -21,41 +19,37 @@ def report(request):
     make_and_send_report(email)
     return Response('email true')
 
-# @api_view(['GET'])
-# def recognize(request):
-#     email = 'stepanovaks99@mail.ru'
-#
-#     ct = load_image('/home/ytka/workspace/diplom/dataset/study_0302.nii.gz')
-#     ct_preprocess = preprocess(ct)
-#     # ct_preprocess = ct
-#     # mask = load_image('/home/ytka/workspace/diplom/dataset/study_0302_mask.nii.gz')
-#
-#     mask = run_model(ct_preprocess) # TODO:: передать кт
-#     print('got mask from model')
-#     make_and_send_report(ct_preprocess, mask, email)
-#     return Response('recognized')
-
-import json
-
-# socket.send(data.encode())
+@api_view(['POST'])
+def question(request):
+    print(request.POST)
+    email = request.POST['email']
+    question = request.POST['question']
+    send_question_to_email(email, question)
 
 
+    return Response('OK')
+
+import numpy as np
 
 @api_view(['POST'])
 def recognize(request):
-    print(request.data)
 
+    file = request.FILES['ct']
+    path, is_dir = get_path_to_file(file)
+    print('path = ', path, 'is dir = ', is_dir)
 
-    f = request.FILES['ct']
+    if is_dir:
+        files_in_dir = os.listdir(path)
+        name_file = [x for x in files_in_dir if x.split('.')[-1] == 'mhd'][0]
+        path = os.path.join(path, name_file)
+        print('path = ', path)
 
-
-    path = do_work_user_ct(f)
-
-    # email = 'gfrv.rafael@gmail.com'
     ct, ct_matrix = load_image(path)
-
+    print('loaded image')
+    print('ct shape = ', ct_matrix.shape)
     mask_lung = segmentation_lung(ct)
-
+    print('mask lung = ', mask_lung.shape)
+    print('segmentated lung')
 
     ct_preprocess = preprocess(ct_matrix)
     mask_lesion = run_model(ct_preprocess)
@@ -68,25 +62,12 @@ def recognize(request):
         'last_name': request.data['last_name'],
         'father_name': request.data['father_name'],
         'birthday': request.data['birthday'],
-        'volume_lesion': str(volume_lesion),
+        'volume_lesion': str(volume_lesion['lung']),
+        'volume_lesion_left': str(volume_lesion['left']),
+        'volume_lesion_right': str(volume_lesion['right']),
         'mode': request.data['mode'],
         'email': request.data['email'],
     }
 
-    print('data_for_report before report = ', data_for_report)
-
-
     make_and_send_report(ct_preprocess, mask_lesion, data_for_report)
     return Response('OK')
-
-@api_view(['GET', 'POST'])
-def test(request):
-    print('test test')
-    print(request)
-    return Response('test')
-
-
-def index(request):
-    print('test')
-    return HttpResponse("Hello, World!")
-

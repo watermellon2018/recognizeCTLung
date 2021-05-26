@@ -9,6 +9,29 @@ from diplom_backend.service.report import make_report
     Отправка сформированного отчета на email
 '''
 
+def send_question_to_email(target, question):
+    subject = "Вопрос техподдержке"
+    mail = "stepanovaks99@mail.ru"
+
+    question += '\nОтвет присылать на эту почту: ' + target
+
+    server = smtplib.SMTP('smtp.mail.ru', 587)
+    server.ehlo()
+    server.starttls()
+    server.login(mail, 'Lena_05')
+
+    msg = MIMEMultipart()
+    msg['From'] = mail
+    msg['To'] = mail
+    msg['Date'] = formatdate(localtime=True)
+    msg['Subject'] = subject
+    msg.attach(MIMEText(question))
+
+    server.sendmail(mail, mail, msg.as_string())
+    server.quit()
+    server.close()
+
+
 def make_and_send_report(ct, mask, data_for_report):
     email = data_for_report['email']
     mask = mask.numpy()

@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState, ReactNode} from 'react';
+import React, {FC, useEffect, useState, ReactNode, CSSProperties} from 'react';
 import { Button, Tooltip } from 'antd';
 
 interface WButtonI {
@@ -11,6 +11,7 @@ interface WButtonI {
     onClick?: () => void;
     type?: 'primary' | 'ghost' | 'dashed' | 'link' | 'text' | 'default';
     htmlType?: 'button' | 'submit' | 'reset';
+    style?: CSSProperties;
 }
 
 const WButton: FC<WButtonI> = ({
@@ -21,6 +22,7 @@ const WButton: FC<WButtonI> = ({
     onClick = () => {},
     type = 'default',
     htmlType = 'button',
+    style = {}
 }) => {
 
 
@@ -28,7 +30,8 @@ const WButton: FC<WButtonI> = ({
 
     return (
         <Tooltip title={tooltip}>
-            <Button 
+            <Button
+                style={style}
                 type={type}
                 onClick={onClick}
                 size={size} 
@@ -44,6 +47,7 @@ const WButton: FC<WButtonI> = ({
 
     return (
         <Button 
+            style={style}
             onClick={onClick}
             size={size}
             shape={shape}

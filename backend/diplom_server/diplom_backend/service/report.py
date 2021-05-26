@@ -22,15 +22,27 @@ def make_report(ct_preprocessed, mask, data_for_report):
     ct_with_contours = apply_contours(ct_preprocessed, mask, is_detection)
 
     print('data_for_report = ', data_for_report)
-    V = np.round(float(data_for_report['volume_lesion']) * 100, 3)
+    V = np.round(float(data_for_report['volume_lesion']), 3)
+    V_left = np.round(float(data_for_report['volume_lesion_left']), 3)
+    V_right = np.round(float(data_for_report['volume_lesion_right']), 3)
 
     type_homogen = get_type_homogen(V)
 
+
     text_for_ct = "Дата: " + datetime.datetime.now().strftime(
-        '%H:%M %d.%m.%Y') + "\nПациент: " + data_for_report['name'] + " " + data_for_report['father_name'] + \
+        '%H:%M %d.%m.%Y') + \
+        "\n\nДанные о пациенте\n" + \
+                  "\nПациент: " + data_for_report['name'] + " " + data_for_report['father_name'] + \
                   " " + data_for_report['last_name'] + "\n" + \
                   "Дата рождения: " + data_for_report['birthday'] +"\n" + type_homogen + \
-            "\nПроцент поражения: " + str(V) + "%"
+        "\nЖалобы: ДОБАВИТЬ ЖАЛОБЫ!" + \
+        "\n\nРезультаты анализа\n" + \
+            "\nПроцент поражения лекгих: " + str(V) + "%" + \
+            "\nПроцент поражения левого легкого: " + str(V_left) + "%" + \
+            "\nПроцент поражения правого легкого: " + str(V_right) + "%" + \
+        ""
+
+
 
     doc_gen = record_img(ct_with_contours, text_for_ct)
 
@@ -126,8 +138,22 @@ def record_img(imgs, text=None):
     report_page.drawLine(fitz.Point(padding_left_report, 40), fitz.Point(550, 40))
 
     report_text, last_pos = write_analys_text(report_text, text)
-    report_page.writeText(writers=report_text)
+    #report_page.writeText(writers=report_text)
     report_page.drawLine(fitz.Point(padding_left_report, last_pos + 10), fitz.Point(550, last_pos + 10))
+
+    test_post_scriptum = "\n\nПри объеме поражения близким к нулю, следует считать, что легкие здоровые.\n" + \
+                         "\nВнимание!\nРезультаты анализа не нужно принимать за единственно верный результат.\n" + \
+                         "Чтобы принимать дальнейшие действия, необходима ОБЯЗАТЕЛЬНАЯ \nконсультация врача!" + \
+                         "В случае неутешительного результата, ни в коем случае \nне нужно подаваться панике или опускать руки." + \
+                         "Программа может ошибаться, \nпоэтому необходимо обратиться к специалистам для дальнейшей консультации,\n" + \
+                         "а лучше к нескольким"
+
+    for line in test_post_scriptum.split("\n"):
+        report_text.append(pos=fitz.Point(padding_left_report, last_pos), text=line, language='ru', fontsize=fontsize)
+        last_pos = last_pos + 15
+    report_page.writeText(writers=report_text)
+
+
 
     number_page = 1
     doc.insertPage(pno=number_page)

@@ -1,14 +1,11 @@
 import cv2
 import torch
-from diplom_backend.util.device import Device
 
 
 def preprocess(ct):
     X = [preprocess_slice(x) for x in ct]
     X = torch.tensor(X)
     X = torch.unsqueeze(X, 1)
-    # device = Device().get_device()
-    # X = X.to(device)
 
     return X
 

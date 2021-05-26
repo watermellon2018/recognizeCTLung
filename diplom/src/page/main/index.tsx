@@ -1,7 +1,7 @@
 
 import React, {FC, useEffect, useState} from 'react';
-import { Result, notification, Spin, Input, Form, Upload } from 'antd';
-import { QuestionOutlined } from '@ant-design/icons';
+import { Result, notification, Form, Upload } from 'antd';
+import { QuestionOutlined, MailOutlined } from '@ant-design/icons';
 import './style.scss';
 import WButton from '../../components/button';
 import axios from 'axios';
@@ -14,6 +14,7 @@ import FormSetting from '../../components/layouts/formSetting';
 import '../../components/layouts/formSetting/style.scss';
 import { useForm } from 'antd/lib/form/Form';
 import SpinW from '../../components/spin';
+import TechnicalSupport from '../../components/layouts/technicalSupport';
 
 const { Dragger } = Upload;
 
@@ -31,20 +32,29 @@ interface PersonalSetting {
 
 type type_notification = 'success' | 'error' | 'info' | 'warning' | 'warn';
 
-const AnalisCT: FC<AnalisCTI> = () => {
+export const openNotification = (mes: string, description: string, type: type_notification = 'error') => {
+    notification[type]({
+      message: mes,
+      description,
+      placement: 'bottomLeft', 
+    });
+};
+
+export const AnalisCT: FC<AnalisCTI> = () => {
 
     const [isSelectFile, setIsSelectFile] = useState(false);
     const [isProcess, setIsProcess] = useState(false);
+    const [isShowModalQuestion, setIsShowModelQuestion] = useState(false);
     const [form] = useForm()
 
 
-    const openNotification = (mes: string, description: string, type: type_notification = 'error') => {
+    /*const openNotification = (mes: string, description: string, type: type_notification = 'error') => {
         notification[type]({
           message: mes,
           description,
           placement: 'bottomLeft', 
         });
-      };
+    };*/
 
 
     const onFinish = (values:any) => {
@@ -112,6 +122,7 @@ const AnalisCT: FC<AnalisCTI> = () => {
               //handle error
               console.log(response);
               setIsProcess(false);
+              setIsSelectFile(false);
               openNotification( 'Ошибка', 'Что-то пошло не так');
             });
     }
@@ -134,6 +145,14 @@ const AnalisCT: FC<AnalisCTI> = () => {
             setIsSelectFile(true);
     }
 
+    const showQuestionForCreater = () => {
+        setIsShowModelQuestion(true);
+    }
+
+    const closeModalQuestion = () => {
+        setIsShowModelQuestion(false);
+    }
+
 
     const layout = {
         labelCol: { span: 0 },
@@ -145,6 +164,15 @@ const AnalisCT: FC<AnalisCTI> = () => {
         <div className="watermellon__main">
             <div className="watermellon__main__wrap">
                     <div className="watermellon__main__wrap__info">
+                        <WButton
+                            onClick={showQuestionForCreater}
+                            size='large'
+                            shape="circle"
+                            isHint={true}
+                            tooltip="Задать вопрос"
+                            icon={<MailOutlined />}
+                            style={{marginRight: '10px'}}
+                        />
                     <WButton
                         onClick={showInformation}
                         size='large'
@@ -204,9 +232,18 @@ const AnalisCT: FC<AnalisCTI> = () => {
                 <ModalW 
                     isShow={isShowInfo}
                     onCancel={closeInfo}
+                    width={700}
                     titleModal='Информация о программе'
                 >
                     <Info />  
+                </ModalW>
+
+                <ModalW
+                    isShow={isShowModalQuestion}
+                    onCancel={closeModalQuestion}
+                    titleModal='Задать вопрос'
+                >
+                    <TechnicalSupport onFinish={closeModalQuestion} />
                 </ModalW>
 
             </div>        
@@ -216,4 +253,6 @@ const AnalisCT: FC<AnalisCTI> = () => {
 };
 
 
-export default AnalisCT;
+export default {
+    AnalisCT, openNotification
+};

@@ -6,9 +6,9 @@ import zipfile
 from django.conf import settings
 
 
-def do_work_user_ct(file):
+def get_path_to_file(file):
     path, is_dir = handle_uploaded_file(file)
-    return path
+    return path, is_dir
 
 
 def handle_uploaded_file(f):
@@ -23,6 +23,7 @@ def handle_uploaded_file(f):
 
     if f.name.endswith('.zip'):
         temp_dir = os.path.join(settings.BASE_DIR, 'temp', temp_name.replace(".zip", ""))
+        print('temp_dir = ', temp_dir)
         with zipfile.ZipFile(path, 'r') as zip_ref:
             zip_ref.extractall(os.path.join(settings.BASE_DIR, 'temp', temp_dir))
         is_dir = True

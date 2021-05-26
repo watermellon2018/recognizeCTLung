@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import AnalisCT from './page/main';
+import { AnalisCT } from './page/main';
 import "antd/dist/antd.css";
 
 function App() {
