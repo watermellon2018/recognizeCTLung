@@ -25,8 +25,13 @@ def get_volume_lesion(mask_lung, mask_lesion):
 
     volume = (count_pixel_lesion / count_pixel_lung) * 100
 
-    volume_left = (count_pixel_left_lesion / count_pixel_lung) * 100
-    volume_right = (count_pixel_right_lesion / count_pixel_lung) * 100
+    # volume_left = (count_pixel_left_lesion / count_pixel_lung) * 100
+    # volume_right = (count_pixel_right_lesion / count_pixel_lung) * 100
+
+    volume_left = (count_pixel_left_lesion / unique_value_lung[1]) * 100
+    volume_right = (count_pixel_right_lesion / unique_value_lung[2]) * 100
+    volume = volume_left + volume_right
+
 
     return {
         'lung': np.round(volume, 5),

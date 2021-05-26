@@ -9,7 +9,8 @@
     padding: 0 8px;
     align-items: center;
 
-    div:not(:last-child) {
+
+    & .ant-row {
         margin-bottom: 10px;
     }
 

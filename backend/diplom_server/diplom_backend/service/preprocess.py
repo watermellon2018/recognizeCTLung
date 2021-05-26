@@ -11,7 +11,7 @@ def preprocess(ct):
 
 
 def preprocess_slice(img):
-    size = (160, 160)
+    size = (224, 224) #(160, 160)
     method = cv2.INTER_AREA
 
     if img.shape[0] < size[0]:

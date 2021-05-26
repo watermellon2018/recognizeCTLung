@@ -80,6 +80,8 @@ export const AnalisCT: FC<AnalisCTI> = () => {
 
         if (name.length == 0 && last_name.length == 0 && father_name.length == 0)
             name = '---'
+
+        const complaints = (values.complaints === undefined) ? '---' : values.complaints
       
 
         const param: PersonalSetting = {
@@ -99,6 +101,7 @@ export const AnalisCT: FC<AnalisCTI> = () => {
         bodyFormData.append('last_name', last_name);
         bodyFormData.append('father_name', father_name);
         bodyFormData.append('birthday', birthday);
+        bodyFormData.append('complaints', complaints);
         bodyFormData.append('ct', values['ct_load']['file']['originFileObj']);
 
         setIsProcess(true);

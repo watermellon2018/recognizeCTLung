@@ -23,7 +23,7 @@ const SpinW: FC<SpinI> = ({
         
         <Spin
             size='large'
-            tip='Loading'
+            tip='Анализ'
             indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />}
         >
             {children}

@@ -16,8 +16,7 @@ def make_report(ct_preprocessed, mask, data_for_report):
 
     ct_preprocessed = np.squeeze(ct_preprocessed)
 
-    # if(data_for_report['mode'] == 'detect')
-    #     is_detection = True
+
     is_detection = True if data_for_report['mode'] == 'detect' else False
     ct_with_contours = apply_contours(ct_preprocessed, mask, is_detection)
 
@@ -25,6 +24,18 @@ def make_report(ct_preprocessed, mask, data_for_report):
     V = np.round(float(data_for_report['volume_lesion']), 3)
     V_left = np.round(float(data_for_report['volume_lesion_left']), 3)
     V_right = np.round(float(data_for_report['volume_lesion_right']), 3)
+
+    complaints = data_for_report['complaints']
+    count_word_in_row = 5
+
+    count_space = 0
+    for i in range(len(complaints)):
+        if complaints[i] == ' ':
+            count_space += 1
+
+            if count_space >= count_word_in_row:
+                complaints = complaints[:i] + '\n' + complaints[i + 1:]
+                count_space = 0
 
     type_homogen = get_type_homogen(V)
 
@@ -35,9 +46,9 @@ def make_report(ct_preprocessed, mask, data_for_report):
                   "\nПациент: " + data_for_report['name'] + " " + data_for_report['father_name'] + \
                   " " + data_for_report['last_name'] + "\n" + \
                   "Дата рождения: " + data_for_report['birthday'] +"\n" + type_homogen + \
-        "\nЖалобы: ДОБАВИТЬ ЖАЛОБЫ!" + \
         "\n\nРезультаты анализа\n" + \
-            "\nПроцент поражения лекгих: " + str(V) + "%" + \
+                  "\nЖалобы: " + complaints + \
+                  "\n\nПроцент поражения лекгих: " + str(V) + "%" + \
             "\nПроцент поражения левого легкого: " + str(V_left) + "%" + \
             "\nПроцент поражения правого легкого: " + str(V_right) + "%" + \
         ""
@@ -138,7 +149,6 @@ def record_img(imgs, text=None):
     report_page.drawLine(fitz.Point(padding_left_report, 40), fitz.Point(550, 40))
 
     report_text, last_pos = write_analys_text(report_text, text)
-    #report_page.writeText(writers=report_text)
     report_page.drawLine(fitz.Point(padding_left_report, last_pos + 10), fitz.Point(550, last_pos + 10))
 
     test_post_scriptum = "\n\nПри объеме поражения близким к нулю, следует считать, что легкие здоровые.\n" + \
@@ -195,40 +205,3 @@ def record_img(imgs, text=None):
 
     report_page.writeText(writers=cur_writer)
     return doc
-
-# def record_img(imgs):
-#     doc = fitz.open()
-#     doc.insertPage(pno=0)
-#     report_page = doc[-1]
-#
-#     padding_left, padding_top = 20, 20
-#     x, y = padding_left, padding_top
-#
-#     margin_right, margin_bottom = 10, 10
-#     box = report_page.rect
-#     SIZE = int(box[2] / 5 + margin_right * 5)
-#     number_page = 0
-#
-#     for tmp in imgs:
-#         if len(tmp.shape) < 3 or tmp.shape[2] != 3:
-#             tmp = convert_to_rgb(tmp)
-#         tmp = image_to_stream(tmp)
-#
-#         x2 = x + SIZE
-#         y2 = y + SIZE
-#
-#         report_page.insertImage(rect=fitz.Rect(x, y, x2, y2), stream=tmp)
-#         x += SIZE + margin_right
-#         if x + SIZE > box[2]:
-#
-#             if y + 2 * SIZE + margin_bottom > box[3]:
-#                 number_page += 1
-#                 doc.insertPage(pno=number_page)
-#                 report_page = doc[number_page]
-#                 x = padding_left
-#                 y = padding_top
-#             else:
-#                 x = padding_left
-#                 y += SIZE + margin_bottom
-#     return doc
-#

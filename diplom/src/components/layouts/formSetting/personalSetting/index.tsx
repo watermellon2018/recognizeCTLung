@@ -5,6 +5,7 @@ import { InfoCircleOutlined, HeatMapOutlined,
 import '../style.scss';
 
 const PersonalSettingForm: FC = ({}) => {
+    const { TextArea } = Input;
 
 
 
@@ -49,7 +50,17 @@ const PersonalSettingForm: FC = ({}) => {
                     <DatePicker style={{maxWidth: '150px' }} />
                 </Form.Item>
             </div>
+            
         </div>
+
+        <div>
+                <Form.Item
+                    name={['complaints']}
+                    label="Жалобы"
+                >
+                    <TextArea rows={4} />
+                </Form.Item>
+            </div>
 
     </>
 
