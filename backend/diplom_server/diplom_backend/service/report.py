@@ -6,7 +6,6 @@ import numpy as np
 import fitz
 import datetime
 
-''' В функцию передается КТ снимок и его маска'''
 def make_report(ct_preprocessed, mask, data_for_report):
 
 
@@ -17,8 +16,7 @@ def make_report(ct_preprocessed, mask, data_for_report):
     ct_preprocessed = np.squeeze(ct_preprocessed)
 
 
-    is_detection = True if data_for_report['mode'] == 'detect' else False
-    ct_with_contours = apply_contours(ct_preprocessed, mask, is_detection)
+    ct_with_contours = apply_contours(ct_preprocessed, mask)
 
     print('data_for_report = ', data_for_report)
     V = np.round(float(data_for_report['volume_lesion']), 3)
@@ -38,10 +36,11 @@ def make_report(ct_preprocessed, mask, data_for_report):
                 count_space = 0
 
     type_homogen = get_type_homogen(V)
+    print(data_for_report['birthday'])
 
 
     text_for_ct = "Дата: " + datetime.datetime.now().strftime(
-        '%H:%M %d.%m.%Y') + \
+        '%d.%m.%Y') + \
         "\n\nДанные о пациенте\n" + \
                   "\nПациент: " + data_for_report['name'] + " " + data_for_report['father_name'] + \
                   " " + data_for_report['last_name'] + "\n" + \
@@ -85,11 +84,7 @@ def apply_contours(ct_norm, mask, is_detection = False):
             ct_rgb = detection(contours, ct_rgb)
         else:
             ct_rgb = cv2.drawContours(ct_rgb, contours, -1, (255, 0, 0), 1)
-            # for c in contours:
-            #     x, y, w, h = cv2.boundingRect(c)
-            #     cv2.rectangle(ct_rgb, (x, y), (x + w, y + h), (0, 255, 0), 1)
 
-        # ct_rgb = cv2.drawContours(ct_rgb, contours, -1, (255, 0, 0), 1)
         ts.append(ct_rgb)
 
     ts = np.array(ts)
@@ -99,7 +94,8 @@ def apply_contours(ct_norm, mask, is_detection = False):
 def get_img_with_contours(origin):
     img = convert_to_rgb(origin)
     gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
-    ret, thresh = cv2.threshold(gray, 2, 5, 0)
+    # ret, thresh = cv2.threshold(gray, 2, 5, 0)
+    ret, thresh = cv2.threshold(gray, 1, 1, 0)
     contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
     return contours

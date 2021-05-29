@@ -17,12 +17,6 @@ const SettingAnalys: FC = ({}) => {
                 <Input minLength={5} maxLength={255} allowClear style={{width: "50%"}} />
             </Form.Item>
 
-            <Form.Item initialValue='segmentation' name="mode" label="Режим">
-                <Radio.Group>
-                    <Radio value="segmentation">Сегментация</Radio>
-                    <Radio value="detection">Детекция</Radio>
-                </Radio.Group>
-            </Form.Item>
         </>
 
     )

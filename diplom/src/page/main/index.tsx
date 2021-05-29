@@ -60,7 +60,6 @@ export const AnalisCT: FC<AnalisCTI> = () => {
             return;
         }
         
-        const mode = (values['mode'] === undefined) ? 'segmentation' : values['mode'];
         let name = (values['name'] === undefined || values['name'].length === 0) ? '' : values['name'];
         const last_name = (values['last_name'] === undefined || values['last_name'].length === 0) 
                             ? '' : values['last_name'];
@@ -87,7 +86,6 @@ export const AnalisCT: FC<AnalisCTI> = () => {
         console.log({...param});
         const bodyFormData = new FormData();
         bodyFormData.append('email', values.email);
-        bodyFormData.append('mode', mode);
         bodyFormData.append('name', name);
         bodyFormData.append('last_name', last_name);
         bodyFormData.append('father_name', father_name);

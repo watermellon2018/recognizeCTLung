@@ -1,7 +1,7 @@
 import React, {FC, useEffect, useState} from 'react';
-import { Button, Divider, Input, DatePicker, Radio, Form, message, Upload, Tooltip } from 'antd';
-import { InfoCircleOutlined, HeatMapOutlined,
-     CloudDownloadOutlined, QuestionOutlined, SlackOutlined, SendOutlined } from '@ant-design/icons';
+import { Divider, Input, DatePicker, Form } from 'antd';
+import locale from 'antd/es/date-picker/locale/ru_RU';
+
 import '../style.scss';
 
 const PersonalSettingForm: FC = ({}) => {
@@ -47,7 +47,7 @@ const PersonalSettingForm: FC = ({}) => {
                     name={['birthday']}
                     label="Дата рождения"
                 >
-                    <DatePicker placeholder='Выберете дату' style={{maxWidth: '150px' }} />
+                    <DatePicker locale={locale} placeholder='Выберете дату' style={{maxWidth: '150px' }} />
                 </Form.Item>
             </div>
             

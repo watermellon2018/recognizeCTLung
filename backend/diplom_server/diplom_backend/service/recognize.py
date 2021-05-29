@@ -28,12 +28,13 @@ def run_model(ct):
 def get_result_model(X):
 
     device = Device().get_device()
-    # model = AttU_Net()
-    # model.load_state_dict(torch.load('/home/ytka/workspace/diplom/util_for_app/atet_224_clear_rd_224_200_8_0.859.pt', map_location=torch.device('cpu')))
+    model = AttU_Net()
+    model.load_state_dict(torch.load('/home/ytka/workspace/diplom/util_for_app/atet_224_clear_rd_224_200_8_0.859.pt', map_location=torch.device('cpu')))
     model = XNet()
-    # model = UNet()
-    # model.load_state_dict(torch.load('/home/ytka/workspace/diplom/util_for_app/unet_clear_rd_160_200_8_0.8841373251273154.pt', map_location=torch.device('cpu')))
+    #model = UNet()
+    #model.load_state_dict(torch.load('/home/ytka/workspace/diplom/util_for_app/unet_clear_rd_160_200_8_0.8841373251273154.pt', map_location=torch.device('cpu')))
     model.load_state_dict(torch.load('/home/ytka/workspace/diplom/util_for_app/xnet_dict.pt', map_location=torch.device('cpu')))
+
     model = model.to(device)
     Y = None
 
