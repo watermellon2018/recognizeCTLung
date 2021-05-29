@@ -1,6 +1,4 @@
-from diplom_backend.util.xnet import XNet
 import torch
-from diplom_backend.service.preprocess import preprocess
 from diplom_backend.util.device import Device
 from diplom_backend.util.xnet import XNet
 from diplom_backend.util.unet import UNet
