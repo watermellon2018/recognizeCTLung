@@ -47,7 +47,7 @@ const PersonalSettingForm: FC = ({}) => {
                     name={['birthday']}
                     label="Дата рождения"
                 >
-                    <DatePicker style={{maxWidth: '150px' }} />
+                    <DatePicker placeholder='Выберете дату' style={{maxWidth: '150px' }} />
                 </Form.Item>
             </div>
             

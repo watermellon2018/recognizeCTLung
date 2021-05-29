@@ -48,15 +48,6 @@ export const AnalisCT: FC<AnalisCTI> = () => {
     const [form] = useForm()
 
 
-    /*const openNotification = (mes: string, description: string, type: type_notification = 'error') => {
-        notification[type]({
-          message: mes,
-          description,
-          placement: 'bottomLeft', 
-        });
-    };*/
-
-
     const onFinish = (values:any) => {
       ;
         if(values['ct_load'] === undefined){
@@ -120,6 +111,11 @@ export const AnalisCT: FC<AnalisCTI> = () => {
                 setIsSelectFile(false);
                 setIsProcess(false);
                 openNotification( 'Обработка завершена', 'КТ снимок обработан. Результаты отправлены на почту', 'success');
+                
+                const infoAboutAnalys = 'Объем поражения: ' + response.data.volume_lesion + 
+                 '%. Процент поражения в левом легком: ' + response.data.volume_lesion_left + 
+                 '%. Процент поражения в правом легком: ' + response.data.volume_lesion_right + '%';
+                openNotification('Быстрый ответ', infoAboutAnalys, 'info');
             })
             .catch(function (response) {
               //handle error

@@ -18,7 +18,7 @@ def resize_image_ar(img_ar):
     return img_ar
 
 def resize_img(img):
-    size = (256, 256)  # (160, 160)
+    size = (224, 224)  # (160, 160)
     method = cv2.INTER_AREA
 
     if img.shape[0] < size[0]:
