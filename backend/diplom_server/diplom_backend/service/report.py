@@ -9,7 +9,6 @@ import datetime
 def make_report(ct_preprocessed, mask, data_for_report):
 
 
-    # TODO:: разобраться с типами
     if ct_preprocessed.dtype == np.uint8:
         ct_preprocessed = ct_preprocessed.astype(np.int16)
 
@@ -47,9 +46,9 @@ def make_report(ct_preprocessed, mask, data_for_report):
                   "Дата рождения: " + data_for_report['birthday'] +"\n" + type_homogen + \
         "\n\nРезультаты анализа\n" + \
                   "\nЖалобы: " + complaints + \
-                  "\n\nПроцент поражения лекгих: " + str(V) + "%" + \
-            "\nПроцент поражения левого легкого: " + str(V_left) + "%" + \
-            "\nПроцент поражения правого легкого: " + str(V_right) + "%" + \
+                  "\n\nПроцент негомогенности легких: " + str(V) + "%" + \
+            "\nПроцент негомогенности левого легкого: " + str(V_left) + "%" + \
+            "\nПроцент негомогенности правого легкого: " + str(V_right) + "%" + \
         ""
 
 
@@ -59,12 +58,12 @@ def make_report(ct_preprocessed, mask, data_for_report):
     return doc_gen
 
 def get_type_homogen(V):
-    type_homogen = "Малая гомогенность"
+    type_homogen = "Малая негомогенность"
 
     if V > 30 and V < 60:
-        type_homogen = "Средняя гомогенность"
+        type_homogen = "Средняя негомогенность"
     elif V >= 60:
-        type_homogen = "Высокая гомогенность"
+        type_homogen = "Высокая негомогенность"
 
     return type_homogen
 

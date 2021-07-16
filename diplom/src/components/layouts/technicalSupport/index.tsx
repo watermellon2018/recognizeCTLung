@@ -25,7 +25,7 @@ const TechnicalSupport: FC<TechnicalSupport> = ({
 
        axios({
             method: "post",
-            url: "http://localhost:8000/question/",
+            url: "http://localhost:8001/question/",
             data: bodyFormData,
             headers: { "Content-Type": "multipart/form-data" },
           })

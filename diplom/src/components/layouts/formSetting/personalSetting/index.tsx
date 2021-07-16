@@ -26,7 +26,7 @@ const PersonalSettingForm: FC = ({}) => {
                     <Form.Item 
                         name={['father_name']}
                         label="Отчество"
-                        rules={[{pattern: new RegExp(/^[a-zA-Zа-яА-я ]*$/), message: 'Введите фамилию'}]}
+                        rules={[{pattern: new RegExp(/^[a-zA-Zа-яА-я ]*$/), message: 'Введите отчество'}]}
                     >
                         <Input allowClear maxLength={255} style={{maxWidth: "150px"}} />
                     </Form.Item>
@@ -37,7 +37,7 @@ const PersonalSettingForm: FC = ({}) => {
                 <Form.Item 
                     name={['last_name']}
                     label="Фамилия"
-                    rules={[{pattern: new RegExp(/^[a-zA-Zа-яА-я ]*$/), message: 'Введите отчество'}]}
+                    rules={[{pattern: new RegExp(/^[a-zA-Zа-яА-я ]*$/), message: 'Введите фамилию'}]}
                 >
                     <Input allowClear maxLength={255} style={{maxWidth: "150px"}} />
                 </Form.Item>

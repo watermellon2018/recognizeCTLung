@@ -98,7 +98,7 @@ export const AnalisCT: FC<AnalisCTI> = () => {
 
         axios({
             method: "post",
-            url: "http://localhost:8000/recognize/",
+            url: "http://localhost:8001/recognize/",
             data: bodyFormData,
             headers: { "Content-Type": "multipart/form-data" },
           })
@@ -114,13 +114,15 @@ export const AnalisCT: FC<AnalisCTI> = () => {
                  '%. Процент поражения в левом легком: ' + response.data.volume_lesion_left + 
                  '%. Процент поражения в правом легком: ' + response.data.volume_lesion_right + '%';
                 openNotification('Быстрый ответ', infoAboutAnalys, 'info');
+                form.resetFields();
             })
             .catch(function (response) {
               //handle error
               console.log(response);
-              setIsProcess(false);
+              setIsProcess(false                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                );
               setIsSelectFile(false);
               openNotification( 'Ошибка', 'Что-то пошло не так');
+              form.resetFields();
             });
     }
 

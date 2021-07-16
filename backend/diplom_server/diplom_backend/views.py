@@ -33,12 +33,6 @@ def recognize(request):
     file = request.FILES['ct']
     path, is_dir = get_path_to_file(file)
 
-    if is_dir:
-        files_in_dir = os.listdir(path)
-        print(files_in_dir)
-        return Response('OK')
-
-
 
     if is_dir:
         files_in_dir = os.listdir(path)
@@ -48,7 +42,7 @@ def recognize(request):
     ct, ct_matrix = load_image(path)
 
     pool = ThreadPool(processes=1)
-    async_result = pool.apply_async(segmentation_lung, (ct,))  # tuple of args for foo
+    async_result = pool.apply_async(segmentation_lung, (ct,))
 
     ct_preprocess = preprocess(ct_matrix)
     mask_lesion = run_model(ct_preprocess)
@@ -77,5 +71,4 @@ def recognize(request):
         'volume_lesion_left': str(volume_lesion['left']),
         'volume_lesion_right': str(volume_lesion['right']),
     }
-    return Response('OK')
-    # return Response(data_for_response)
+    return Response(data_for_response)
